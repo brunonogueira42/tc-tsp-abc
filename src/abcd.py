@@ -22,7 +22,7 @@ def calcular_distancia(solucao, cidades):
     # Agora adiciona a cidade inicial e a final
     cidade_inicial = cidades[solucao[0]]
     cidade_final = cidades[solucao[-1]]
-    distancia += math.sqrt((cidade_inicial[0] - cidade_final[0])**2 + (cidade_inicial[1] - cidade_final[1])**2)
+    distancia += math.sqrt((cidade_final[0] - cidade_inicial[0])**2 + (cidade_final[1] - cidade_inicial[1])**2)
     
     return distancia
     
