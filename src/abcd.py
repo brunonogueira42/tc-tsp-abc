@@ -1,9 +1,30 @@
+import random
+import math
 
 def iniciar_populacao(abelhas, num_cidades):
-    print("iniciar_populacao") # gerar soluções aleatórias
+    populacao = []
+
+    for _ in range(abelhas):
+        solucao = list(range(num_cidades))
+        random.shuffle(solucao)
+        populacao.append(solucao)
+    
+    return populacao
     
 def calcular_distancia(solucao, cidades):
-    print("calcular_distancia")
+    distancia = 0
+
+    for i in range(len(solucao) - 1):
+        cidade_atual = cidades[solucao[i]]
+        proxima_cidade = cidades[solucao[i + 1]]
+        # Formula da Distancia Euclidiana é d = raiz((x2 - x1)² + (y2 - y1)²)
+        distancia += math.sqrt((cidade_atual[0] - proxima_cidade[0])**2 + (cidade_atual[1] - proxima_cidade[1])**2)
+    # Agora adiciona a cidade inicial e a final
+    cidade_inicial = cidades[solucao[0]]
+    cidade_final = cidades[solucao[-1]]
+    distancia += math.sqrt((cidade_inicial[0] - cidade_final[0])**2 + (cidade_inicial[1] - cidade_final[1])**2)
+    
+    return distancia
     
 def gerar_solucao_candidata(solucao):
     print("gerar_solucao_candidata") # utilizar equação de modificação?
@@ -14,7 +35,11 @@ def escolher_melhor_solucao(solucao, solucao_candidata):
 def calcular_probabilidades(fitness):
     print("calcular_probabilidade")
 
-def abc(cidades, abelhas, ciclos, limite):
+def abc(cidades, abelhas, ciclos, limite, seed=2024):
+
+    if seed is not None:
+        random.seed(seed)
+
     num_cidades = len(cidades)
     populacao = iniciar_populacao(abelhas, num_cidades)
     fitness = [calcular_distancia(solucao, cidades) for solucao in populacao]
