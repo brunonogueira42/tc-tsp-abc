@@ -39,7 +39,9 @@ def escolher_melhor_solucao(solucao, solucao_candidata, cidades):
     return solucao_candidata if distancia_candidata < distancia_atual else solucao
     
 def calcular_probabilidades(fitness):
-    print("calcular_probabilidade")
+    inverso_fitness = [1 / f for f in fitness]
+    total = sum(inverso_fitness)
+    return [f / total for f in inverso_fitness]
 
 def abc(cidades, abelhas, ciclos, limite, seed=2024):
 
@@ -62,11 +64,11 @@ def abc(cidades, abelhas, ciclos, limite, seed=2024):
             fitness[i] =  calcular_distancia(populacao[i], cidades)
             
         probabilidades = calcular_probabilidades(fitness)
-        for i in range(abelhas):
-            j =  # abelha observadora escolhe uma solução baseado nas probabilidades
-            solucao_candidata = gerar_solucao_candidata(populacao[j])
-            populacao[j] = escolher_melhor_solucao(populacao[j], solucao_candidata, cidades)
-            fitness[j] =  calcular_distancia(populacao[j], cidades)
+        for _ in range(abelhas):
+            i = random.choices(range(abelhas), probabilidades)[0]
+            solucao_candidata = gerar_solucao_candidata(populacao[i])
+            populacao[i] = escolher_melhor_solucao(populacao[i], solucao_candidata, cidades)
+            fitness[i] =  calcular_distancia(populacao[i], cidades)
             
         for i in range(abelhas):
             if tentativas[i] > limite:
