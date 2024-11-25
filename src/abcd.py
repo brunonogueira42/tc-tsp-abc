@@ -43,10 +43,7 @@ def calcular_probabilidades(fitness):
     total = sum(inverso_fitness)
     return [f / total for f in inverso_fitness]
 
-def abc(cidades, num_abelhas, ciclos, limite, seed=2024):
-    if seed is not None:
-        random.seed(seed)
-
+def abcd(cidades, num_abelhas, ciclos, limite):
     num_cidades = len(cidades)
     populacao = iniciar_populacao(num_abelhas, num_cidades)
     fitness = [calcular_distancia(solucao, cidades) for solucao in populacao]
