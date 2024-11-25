@@ -33,8 +33,10 @@ def gerar_solucao_candidata(solucao):
     solucao_candidata[a], solucao_candidata[b] = solucao_candidata[b], solucao_candidata[a]
     return solucao_candidata
     
-def escolher_melhor_solucao(solucao, solucao_candidata):
-    print("escolher_melhor_solucao")
+def escolher_melhor_solucao(solucao, solucao_candidata, cidades):
+    distancia_atual = calcular_distancia(solucao, cidades)
+    distancia_candidata = calcular_distancia(solucao_candidata, cidades)
+    return solucao_candidata if distancia_candidata < distancia_atual else solucao
     
 def calcular_probabilidades(fitness):
     print("calcular_probabilidade")
@@ -56,14 +58,14 @@ def abc(cidades, abelhas, ciclos, limite, seed=2024):
     for ciclo in range(ciclos):
         for i in range(abelhas):
             solucao_candidata = gerar_solucao_candidata(populacao[i])
-            populacao[i] = escolher_melhor_solucao(populacao[i], solucao_candidata)
+            populacao[i] = escolher_melhor_solucao(populacao[i], solucao_candidata, cidades)
             fitness[i] =  calcular_distancia(populacao[i], cidades)
             
         probabilidades = calcular_probabilidades(fitness)
         for i in range(abelhas):
             j =  # abelha observadora escolhe uma solução baseado nas probabilidades
             solucao_candidata = gerar_solucao_candidata(populacao[j])
-            populacao[j] = escolher_melhor_solucao(populacao[j], solucao_candidata)
+            populacao[j] = escolher_melhor_solucao(populacao[j], solucao_candidata, cidades)
             fitness[j] =  calcular_distancia(populacao[j], cidades)
             
         for i in range(abelhas):
