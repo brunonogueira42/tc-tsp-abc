@@ -1,10 +1,10 @@
 import random
 import math
 
-def iniciar_populacao(abelhas, num_cidades):
+def iniciar_populacao(num_abelhas, num_cidades):
     populacao = []
 
-    for _ in range(abelhas):
+    for _ in range(num_abelhas):
         solucao = list(range(num_cidades))
         random.shuffle(solucao)
         populacao.append(solucao)
@@ -43,36 +43,46 @@ def calcular_probabilidades(fitness):
     total = sum(inverso_fitness)
     return [f / total for f in inverso_fitness]
 
-def abc(cidades, abelhas, ciclos, limite, seed=2024):
+def abc(cidades, num_abelhas, ciclos, limite, seed=2024):
     if seed is not None:
         random.seed(seed)
 
     num_cidades = len(cidades)
-    populacao = iniciar_populacao(abelhas, num_cidades)
+    populacao = iniciar_populacao(num_abelhas, num_cidades)
     fitness = [calcular_distancia(solucao, cidades) for solucao in populacao]
-    tentativas = [0] * abelhas
+    tentativas = [0] * num_abelhas
     
     i = fitness.index(min(fitness))
     melhor_solucao = populacao[i]
     melhor_fitness = fitness[i]
     
-    for ciclo in range(ciclos):
+    for _ in range(ciclos):
         # Fase das abelhas empregadas
-        for i in range(abelhas):
+        for i in range(num_abelhas):
             solucao_candidata = gerar_solucao_candidata(populacao[i])
-            populacao[i] = escolher_melhor_solucao(populacao[i], solucao_candidata, cidades)
+            nova_solucao = escolher_melhor_solucao(populacao[i], solucao_candidata, cidades)
+            if nova_solucao == populacao[i]:
+                tentativas[i] += 1
+            else:
+                tentativas[i] = 0
+            populacao[i] = nova_solucao
             fitness[i] = calcular_distancia(populacao[i], cidades)
         
         # Fase das abelhas observadoras
         probabilidades = calcular_probabilidades(fitness)
-        for _ in range(abelhas):
-            i = random.choices(range(abelhas), probabilidades)[0]
+        for _ in range(num_abelhas):
+            i = random.choices(range(num_abelhas), probabilidades)[0]
             solucao_candidata = gerar_solucao_candidata(populacao[i])
-            populacao[i] = escolher_melhor_solucao(populacao[i], solucao_candidata, cidades)
+            nova_solucao = escolher_melhor_solucao(populacao[i], solucao_candidata, cidades)
+            if nova_solucao == populacao[i]:
+                tentativas[i] += 1
+            else:
+                tentativas[i] = 0
+            populacao[i] = nova_solucao
             fitness[i] = calcular_distancia(populacao[i], cidades)
         
         # Fase das abelhas escoteiras
-        for i in range(abelhas):
+        for i in range(num_abelhas):
             if tentativas[i] > limite:
                 populacao[i] = list(range(num_cidades))
                 random.shuffle(populacao[i])
