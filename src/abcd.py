@@ -44,7 +44,6 @@ def calcular_probabilidades(fitness):
     return [f / total for f in inverso_fitness]
 
 def abc(cidades, abelhas, ciclos, limite, seed=2024):
-
     if seed is not None:
         random.seed(seed)
 
@@ -58,26 +57,32 @@ def abc(cidades, abelhas, ciclos, limite, seed=2024):
     melhor_fitness = fitness[i]
     
     for ciclo in range(ciclos):
+        # Fase das abelhas empregadas
         for i in range(abelhas):
             solucao_candidata = gerar_solucao_candidata(populacao[i])
             populacao[i] = escolher_melhor_solucao(populacao[i], solucao_candidata, cidades)
-            fitness[i] =  calcular_distancia(populacao[i], cidades)
-            
+            fitness[i] = calcular_distancia(populacao[i], cidades)
+        
+        # Fase das abelhas observadoras
         probabilidades = calcular_probabilidades(fitness)
         for _ in range(abelhas):
             i = random.choices(range(abelhas), probabilidades)[0]
             solucao_candidata = gerar_solucao_candidata(populacao[i])
             populacao[i] = escolher_melhor_solucao(populacao[i], solucao_candidata, cidades)
-            fitness[i] =  calcular_distancia(populacao[i], cidades)
-            
+            fitness[i] = calcular_distancia(populacao[i], cidades)
+        
+        # Fase das abelhas escoteiras
         for i in range(abelhas):
             if tentativas[i] > limite:
-                populacao[i] = # nova solução é gerada aleatóriamente
+                populacao[i] = list(range(num_cidades))
+                random.shuffle(populacao[i])
                 fitness[i] = calcular_distancia(populacao[i], cidades)
                 tentativas[i] = 0
         
+        # Atualizar a melhor solução global
         i = fitness.index(min(fitness))
-        melhor_solucao = populacao[i]
-        melhor_fitness = fitness[i]
+        if fitness[i] < melhor_fitness:
+            melhor_solucao = populacao[i]
+            melhor_fitness = fitness[i]
         
     return melhor_solucao, melhor_fitness
