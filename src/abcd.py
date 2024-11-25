@@ -27,7 +27,11 @@ def calcular_distancia(solucao, cidades):
     return distancia
     
 def gerar_solucao_candidata(solucao):
-    print("gerar_solucao_candidata") # utilizar equação de modificação?
+    solucao_candidata = solucao[:]
+    # Troca duas cidades de lugar aleatoriamente
+    a, b = random.sample(range(len(solucao)), 2)
+    solucao_candidata[a], solucao_candidata[b] = solucao_candidata[b], solucao_candidata[a]
+    return solucao_candidata
     
 def escolher_melhor_solucao(solucao, solucao_candidata):
     print("escolher_melhor_solucao")
