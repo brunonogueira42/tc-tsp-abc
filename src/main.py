@@ -2,6 +2,8 @@ import random
 
 from abcd import abcd
 
+from grafico import mostrar_percurso
+
 def main():
     random.seed(2024)
     
@@ -21,6 +23,8 @@ def main():
     print("\nMelhor solução encontrada:")
     print(f"Ordem das cidades: {melhor_solucao}")
     print(f"Distância total: {melhor_fitness:.2f}")
+
+    mostrar_percurso(cidades, melhor_solucao)
 
 if __name__ == "__main__":
     main()
